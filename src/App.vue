@@ -4,7 +4,7 @@
   <HelloWorld msg="Welcome to Your Vue.js App"/>
   <!-- RecursiveTree -->
   <div>
-    <recursive-tree :title="bookData.name" :children="bookData.childNodes"></recursive-tree>
+    <recursive-tree :title="bookData.name" :children="bookData.childNodes" />
   </div>
 
   <!-- UpdateWithEvent -->
@@ -19,14 +19,30 @@
 
     <!-- 直接將 v-for 的 book 物件作為 props 傳遞 -->
     <!-- 並監聽自訂的 update 事件 -->
-    <update-with-event v-for="(book, idx) in books" :key="idx" v-bind="book" @update="updateInfo"></update-with-event>
+    <update-with-event v-for="(book, idx) in books" :key="idx" v-bind="book" @update="updateInfo" />
   </div>
 
   <!-- UpdateWithModel -->
   <div>
     <h1>{{ modelMessage }}</h1>
 
-    <update-with-model v-model="modelMessage"></update-with-model>
+    <update-with-model v-model="modelMessage" />
+  </div>
+
+  <!-- UpdateWithObject -->
+  <div>
+    <update-with-object
+        v-model:full-name="address.name"
+        v-model:address-line="address.addressLine"
+        v-model:city="address.city"
+        v-model:country="address.country"
+        v-model:postal-code="address.postalCode"
+        v-model:home-address="address.homeAddress"
+    />
+    <hr>
+    <pre :style="{ 'text-align': 'left' }">
+      {{ JSON.stringify(address, null, 2) }}
+    </pre>
   </div>
 </template>
 
@@ -35,16 +51,35 @@ import HelloWorld from './components/HelloWorld.vue'
 import RecursiveTree from "@/components/RecursiveTree";
 import UpdateWithEvent from "@/components/UpdateWithEvent";
 import UpdateWithModel from "@/components/UpdateWithModel";
+import UpdateWithObject from "@/components/UpdateWithObject";
+import { reactive } from "vue";
 
 export default {
   name: 'App',
 
   components: {
+    UpdateWithObject,
     UpdateWithModel,
     UpdateWithEvent,
     HelloWorld,
     RecursiveTree
   },
+
+  setup() {
+    const address = reactive({
+      name: "",
+      addressLine: "",
+      city: "",
+      country: "",
+      postalCode: "",
+      homeAddress: false
+    });
+
+    return {
+      address
+    };
+  },
+
 
   data() {
     return {
